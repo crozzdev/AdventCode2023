@@ -47,5 +47,45 @@ def parse_games(game_set: str) -> list[dict]:
     return game_dict_list
             
             
-            
+def check_game(game: list[dict]) -> bool:
+    """
+    Checks if a game is possible with the cubes in the bag.
+
+    Args:
+        game (list[dict]): The game to be checked. This is a list of dicts, where each dict represent a round.
+
+    Returns:
+        bool: True if the game is possible, False otherwise.
+    """
+    
+    for round in game:
+        for color_cube in round.keys():
+            if int(round[color_cube]) > BAG[color_cube]:
+                return False
+    return True
+
+def find_sum_ids(input: str) -> int:
+    """
+    Calculates the sum of game IDs that meet certain conditions.
+
+    Parameters:
+    input (str): The path to the input file.
+
+    Returns:
+    int: The sum of game IDs.
+
+    """
+    with open(input) as f:
+        lines = f.readlines()
+        sum = 0
+        for line in lines:
+            game_set = parse_games(line)
+            if check_game(game_set):
+                sum += get_gameid(line)
+    return sum
+
+if __name__ == "__main__":
+    print(find_sum_ids("input.txt"))
+
+           
         
