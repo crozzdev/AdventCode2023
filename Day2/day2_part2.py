@@ -17,20 +17,27 @@ def parse_games(game_set: str) -> list[dict]:
     """
     games_list = game_set.split(";")
     game_dict_list = []
-    for index in range(len(games_list)):
+    for game_str in games_list:
         game_dict = {}
-        game_list = games_list[index].split(",")
-        if index == 0:
-            game_list[0] = game_list[0].split(":")[1]
-        for round in game_list:
-            round_split = round.split()
-            number = int(round_split[0])
-            color_cube = round_split[1]
-            game_dict[color_cube] = number
+        rounds = game_str.split(",")
+        if game_str.startswith("Game"):
+            rounds.pop(0)
+        for round_str in rounds:
+            number, color_cube = round_str.strip().split()
+            game_dict[color_cube] = int(number)
         game_dict_list.append(game_dict)
     return game_dict_list
 
-def get_maxdict (game: list[dict]) -> dict:
+def get_maxdict(game: list[dict]) -> dict:
+    """
+    Calculates the maximum value for each color cube in a game.
+
+    Args:
+        game (list[dict]): A list of dictionaries representing each round of the game.
+
+    Returns:
+        dict: A dictionary containing the maximum value for each color cube.
+    """
     max_dict = {"red": 0, "green": 0, "blue": 0}
     for round in game:
         for color_cube in round.keys():
@@ -38,7 +45,16 @@ def get_maxdict (game: list[dict]) -> dict:
                 max_dict[color_cube] = round[color_cube]
     return max_dict
 
-def get_powercube (game_cubes: dict) -> int:
+def get_powercube(game_cubes: dict) -> int:
+    """
+    Calculates the powercube by multiplying all the values in the given dictionary.
+
+    Args:
+        game_cubes (dict): A dictionary containing the game cubes and their values.
+
+    Returns:
+        int: The calculated powercube.
+    """
     powercube = 1
     for value in game_cubes.values():
         powercube *= value
@@ -46,6 +62,15 @@ def get_powercube (game_cubes: dict) -> int:
         
 
 def find_sum_cubespower(input: str) -> int:
+    """
+    Calculates the sum of the power cubes for each game in the input file.
+
+    Args:
+        input (str): The path to the input file.
+
+    Returns:
+        int: The sum of the power cubes.
+    """
     with open(input) as f:
         lines = f.readlines()
         sum = 0
